@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
-import os
 from sympy import symbols, tan, sec, sin, cot, csc, cos, integrate, sympify, log, exp
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
+
 def replace_and_remove(s):
     # Convert the SymPy expression to a string
     s = str(s)
@@ -51,4 +53,4 @@ def integrate_api():
         return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=1000)
+    app.run(host='0.0.0.0', debug=True)
