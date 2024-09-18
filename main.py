@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
+import os
 from sympy import symbols, tan, sec, sin, cot, csc, cos, integrate, sympify, log, exp
 
 app = Flask(__name__)
-
 def replace_and_remove(s):
     # Convert the SymPy expression to a string
     s = str(s)
@@ -39,10 +39,9 @@ def integrate_expr(expr_str):
     integral_result = replace_and_remove(integrate(expr, var))
     return f"{integral_result} + C"
 
-@app.route('/integrate', methods=['POST'])
+@app.route('/integrate', methods=['GET'])
 def integrate_api():
-    data = request.get_json()
-    expr_str = data.get('expression', '')
+    expr_str = request.args.get('expression', '')
     if not expr_str:
         return jsonify({'error': 'No expression provided'}), 400
     try:
@@ -52,11 +51,4 @@ def integrate_api():
         return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
-# Example usage
-expr_str = "(-10*tan(x)**3)/(cos(x)**4)"
-integrate_expr(expr_str)
-
-   
+    app.run(host='0.0.0.0', port=1000)
